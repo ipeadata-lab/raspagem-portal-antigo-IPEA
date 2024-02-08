@@ -3,6 +3,10 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import time
 from main import processar_publicacoes
+def fix_link(link):
+    if link.startswith('/portal'):
+        return 'https://portalantigo.ipea.gov.br' + link
+    return link
 def extrair_informacoes_notas_presidencia(url):
     # Realiza a requisição HTTP
     response = requests.get(url)
@@ -41,7 +45,7 @@ def extrair_informacoes_notas_presidencia(url):
                 'Nota Técnica': [title],  # 'Título' agora é a Nota Técnica
                 'Título': [nota_tecnica],  # 'Nota Técnica' contém o conteúdo de <p class="linha_fina">
                 'Autor': [author],
-                'Link do PDF': [pdf_link]}
+                'Link do PDF': [fix_link(pdf_link)]}
 
         df = pd.DataFrame(data)
 
